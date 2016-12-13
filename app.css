@@ -124,10 +124,11 @@ td.sort-desc:before{content: "▼";color:#111111;font-size:0.8em;line-height:1em
 
 .metro-interactive select{
 	border:none;
-	background-color:transparent;
-	padding:0.25em;
+	background-color:#dddddd;
+	padding:0.3em;
 	line-height:1em;
 	outline:none;
+	height:100%;
 }
 
 /*clearfix this class*/

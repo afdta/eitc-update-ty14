@@ -229,8 +229,8 @@ function mainfn(){
 	var control = d3.select("#eitc-interactive-control");
 	var user_guide = d3.select("#eitc-user-guide-ty2014").attr("href", dir.url("data","UserGuideTY14.docx")).attr("type","application/msword");
 
-	var geo_select_wrap = control.append("div").style("border-bottom","1px solid #aaaaaa")
-											   .style("margin-right","2em")
+	var geo_select_wrap = control.append("div").style("border-bottom","0px solid #aaaaaa")
+											   .style("margin-right","1em")
 											   .classed("control-section", true);
 
 	var geo_levels = [
@@ -245,13 +245,14 @@ function mainfn(){
 		];
 	state.geo = geo_levels[0].code;
 
-	geo_select_wrap.append("p").text("SELECT LEVEL OF GEOGRAPHY")
-						       .style("font-size","0.8em")
-						       .style("margin","0em 0em 0.5em 0em")
-						       .style("line-height","1em")
-						       .style("text-align","left");
-						       
-	var geo_select = geo_select_wrap.append("select");
+	geo_select_wrap.append("div")
+					.style("height","1.2em")
+					.append("p").text("SELECT LEVEL OF GEOGRAPHY")
+					.style("font-size","0.8em")
+					.style("margin","0em")
+					.style("text-align","left");
+
+	var geo_select = geo_select_wrap.append("div").style("height","2em").append("select");
 	var geo_options = geo_select.selectAll("option").data(geo_levels)
 			.enter().append("option").attr("value", function(d,i){return d.code}).text(function(d,i){return d.label});
 
@@ -264,15 +265,16 @@ function mainfn(){
 
 	state.st = fips52[0].STUSAB;
 
-	var state_select_wrap = control.append("div").style("border-bottom","1px solid #aaaaaa")
-											     .style("margin-right","2em")
+	var state_select_wrap = control.append("div").style("border-bottom","0px solid #aaaaaa")
+											     .style("margin-right","1em")
 											     .classed("control-section", true);
-	state_select_wrap.append("p").text("FILTER BY STATE")
-								 .style("font-size","0.8em")
-								 .style("margin","0em 0em 0.5em 0em")
-								 .style("line-height","1em")
-								 .style("text-align","left");
-	var state_select = state_select_wrap.append("select");
+	state_select_wrap.append("div")
+					 .style("height","1.2em")
+					 .append("p").text("FILTER BY STATE")
+					 .style("font-size","0.8em")
+					 .style("margin","0em")
+					 .style("text-align","left");
+	var state_select = state_select_wrap.append("div").style("height","2em").append("select");
 	var state_options = state_select.selectAll("option").data(fips52).enter().append("option")
 			.attr("value", function(d,i){return d.STUSAB}).text(function(d,i){return d.STATE_NAME});
 
@@ -283,21 +285,28 @@ function mainfn(){
 
 	var download_button = control.append("a").style("display","block")
 											 .style("text-decoration", "none")
-										     .style("background-color","#dc2a2a")
 										     .style("color","#ffffff")
 										     .style("font-weight","bold")
 										     .style("width","12em")
-										     .style("height","3.75em")
 										     .style("border","0px solid #aaaaaa")
-										     .style("padding","1.25em")
-										     .style("line-height","1em")
-										     .style("font-size","0.8em")
+										     .style("padding","0em 0em 0em 0em")
 										     .style("text-align","center")
-										     .text("Download CSV »")
 										     .classed("control-section", true);
 
-	download_button.on("mouseenter", function(d,i){download_button.style("text-decoration","underline");});
-	download_button.on("mouseleave", function(d,i){download_button.style("text-decoration","none");});
+	download_button.append("div").style("width","100%").style("height","1.2em");
+
+	var dspan = download_button.append("div")
+				   .style("height","2em")
+				   .style("background-color","#dc2a2a")
+				   .append("span")
+				   .text("Download CSV »")
+				   .style("line-height","2.5em")
+				   .style("display","inline-block")
+				   .style("vertical-align","middle")
+				   .style("font-size","0.8em");
+
+	download_button.on("mouseenter", function(d,i){dspan.style("text-decoration","underline");});
+	download_button.on("mouseleave", function(d,i){dspan.style("text-decoration","none");});
 
 
 
