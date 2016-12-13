@@ -229,6 +229,9 @@ function mainfn(){
 	var control = d3.select("#eitc-interactive-control");
 	var user_guide = d3.select("#eitc-user-guide-ty2014").attr("href", dir.url("data","UserGuideTY14.docx")).attr("type","application/msword");
 
+	var gheight = 200;
+	var svg = d3.select("#eitc-interactive-graphic").style("height",gheight+"px").append("svg").style("height","200");
+
 	var geo_select_wrap = control.append("div").style("border-bottom","0px solid #aaaaaa")
 											   .style("margin-right","1em")
 											   .classed("control-section", true);
@@ -327,6 +330,45 @@ function mainfn(){
 
 		download_button.attr("href", href);
 		download_button.attr("type", "text/csv");
+
+		d3.csv(href, function(E, D){
+			try{
+				if(E){
+					throw "Bad_download";
+				}
+				else{
+					var H = d3.histogram().value(function(d){
+						var num = +(d.ERETURN14.replace(/,/g, ""));
+						var val = +(d.EEICAM14.replace(/,/g, ""));
+						var avg = num==0 ? 0 : val/num;
+						//console.log(avg);
+						//console.log(val + " == " + d.EEICAM14);
+						return avg;
+					});
+					var BINS = H(D);
+					//console.log(BINS);
+					var BINWIDTH = 100/BINS.length > 15 ? 15 : 100/BINS.length;
+					var scale = d3.scaleLinear().domain([0,1]).range([gheight,0]);
+					var max = d3.max(BINS, function(d,i){return d.length});
+					var B = {};
+					B.u = svg.selectAll("rect").data(BINS);
+					B.u.exit().remove();
+					B.e = B.u.enter().append("rect");
+					B.b = B.e.merge(B.u);
+					B.b.attr("x", function(d,i){return (i*BINWIDTH)+"%"})
+					   .attr("y", function(d,i){
+					   		return scale(d.length/max);
+					   })
+					   .attr("height", function(d,i){
+					   		return gheight - scale(d.length/max);
+					   })
+					   .attr("width", BINWIDTH+"%");
+				}
+			}
+			catch(e){
+				svg.selectAll("*").remove();
+			}
+		});
 	}
 
 	setSelection();
